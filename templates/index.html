@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Heart Disease Risk Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="page-container">
+
+        <header class="header">
+            <h1>Heart Disease Risk Prediction</h1>
+            <p>
+                Enter your health details below to receive a machine learning-based
+                heart disease risk prediction.
+            </p>
+        </header>
+
+        <main class="card">
+
+            {% if error %}
+                <div class="error-box">
+                    {{ error }}
+                </div>
+            {% endif %}
+
+        {% if not prediction %}
+            <form action="/predict" method="POST">
+
+                <h2>User Health Details</h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="Height">Height in centimetres <span class="required-star">*</span> </label>
+                        <input type="number" min="100" max="250" step="0.1" name="Height" id="Height" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="Weight">Weight in kilograms <span class="required-star">*</span> </label>
+                        <input type="number" min="30" max="250" step="0.1" name="Weight" id="Weight" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Smoking">Are you a smoker?</label>
+                        <select name="Smoking" id="Smoking" required>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="AlcoholDrinking">Do you frequently consume large amounts of alcohol?</label>
+                        <select name="AlcoholDrinking" id="AlcoholDrinking" required>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Stroke">Have you ever had a stroke? </label>
+                        <select name="Stroke" id="Stroke" required>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="PhysicalHealth">In the past 30 days,for how many days was your physical health not good?<span class="required-star">*</span></label>
+                        <input type="number" min="0" max="30" name="PhysicalHealth" id="PhysicalHealth" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="MentalHealth">In the past 30 days, for how many days was your mental health not good? <span class="required-star">*</span></label>
+                        <input type="number" min="0" max="30" name="MentalHealth" id="MentalHealth" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="DiffWalking">Do you have serious difficulty walking or climbing stairs?</label>
+                        <select name="DiffWalking" id="DiffWalking" required>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Sex">What is your gender?</label>
+                        <select name="Sex" id="Sex" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="AgeCategory">What is your age group?</label>
+                        <select name="AgeCategory" id="AgeCategory" required>
+                            <option value="18-24">18-24</option>
+                            <option value="25-29">25-29</option>
+                            <option value="30-34">30-34</option>
+                            <option value="35-39">35-39</option>
+                            <option value="40-44">40-44</option>
+                            <option value="45-49">45-49</option>
+                            <option value="50-54">50-54</option>
+                            <option value="55-59">55-59</option>
+                            <option value="60-64">60-64</option>
+                            <option value="65-69">65-69</option>
+                            <option value="70-74">70-74</option>
+                            <option value="75-79">75-79</option>
+                            <option value="80 or older">80 or older</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Race">What is your ethnicity?</label>
+                        <select name="Race" id="Race" required>
+                            <option value="White">White</option>
+                            <option value="Black">Black</option>
+                            <option value="Asian">Asian</option>
+                            <option value="American Indian/Alaskan Native">American Indian/Alaskan Native</option>
+                            <option value="Hispanic">Hispanic</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Diabetic">Have you been diagnosed with diabetes?</label>
+                        <select name="Diabetic" id="Diabetic" required>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No, borderline diabetes">No, borderline diabetes</option>
+                            <option value="Yes (during pregnancy)">Yes during pregnancy</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="PhysicalActivity">Do you regularly engage in physical activity or exercise?</label>
+                        <select name="PhysicalActivity" id="PhysicalActivity" required>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="GenHealth">How would you describe your general health?</label>
+                        <select name="GenHealth" id="GenHealth" required>
+                            <option value="Excellent">Excellent</option>
+                            <option value="Very good">Very good</option>
+                            <option value="Good">Good</option>
+                            <option value="Fair">Fair</option>
+                            <option value="Poor">Poor</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="SleepTime">How many hours do you usually sleep per day? <span class="required-star">*</span></label>
+                        <input type="number" min="0" max="24" step="0.5" name="SleepTime" id="SleepTime" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Asthma">Have you been diagnosed with asthma?</label>
+                        <select name="Asthma" id="Asthma" required>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="KidneyDisease">Have you been diagnosed with kidney disease?</label>
+                        <select name="KidneyDisease" id="KidneyDisease" required>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="SkinCancer">Have you been diagnosed with skin cancer?</label>
+                        <select name="SkinCancer" id="SkinCancer" required>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="predict-button">
+                    Predict Heart Disease Risk
+                </button>
+            </form>
+        {% endif %}
+
+        {% if prediction %}
+        <section class="result-box">
+            <h2>Prediction Result</h2>
+    
+            <p class="result-text">
+                {{ prediction }}
+            </p>
+    
+    
+            <p class="probability-text">
+                Estimated probability of Cardiovascular Disease: <strong>{{ probability }}%</strong>
+            </p>
+    
+            {% if risk_level %}
+                <p class="risk-level-text">
+                    Risk level: <strong>{{ risk_level }}</strong>
+                </p>
+            {% endif %}
+    
+    
+            {% if llm_recommendation %}
+                <div class="ai-recommendation-box">
+                    <h3 class="ai-title">
+                        <span class="ai-icon">✦</span>
+                        AI-Enhanced Explanation
+                    </h3>
+    
+                    <p>
+                        {{ llm_recommendation }}
+                    </p>
+                </div>
+            {% endif %}
+    
+            <p class="disclaimer">
+                This result is generated by a machine learning model and should not be
+                treated as a medical diagnosis. Please consult a healthcare professional
+                for medical advice.
+            </p>
+    
+            <a href="/" class="retry-button">
+                Try Again
+            </a>
+        </section>
+        {% endif %}
+        </main>
+
+    </div>
+
+</body>
+</html>
